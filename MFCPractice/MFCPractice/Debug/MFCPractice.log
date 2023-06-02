@@ -1,0 +1,6 @@
+﻿  MFCPracticeDlg.cpp
+d:\backup\documents\visual studio 2017\projects\mfcpractice\mfcpractice\mfcpracticedlg.cpp(337): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+d:\backup\documents\visual studio 2017\projects\mfcpractice\mfcpractice\mfcpracticedlg.cpp(338): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+d:\backup\documents\visual studio 2017\projects\mfcpractice\mfcpractice\mfcpracticedlg.cpp(345): warning C4244: “参数”: 从“double”转换到“FLOAT”，可能丢失数据
+  MFCPractice.vcxproj -> d:\backup\documents\visual studio 2017\Projects\MFCPractice\Debug\MFCPractice.exe
+  MFCPractice.vcxproj -> d:\backup\documents\visual studio 2017\Projects\MFCPractice\Debug\MFCPractice.pdb (Partial PDB)
