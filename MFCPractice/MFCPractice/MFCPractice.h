@@ -3,7 +3,7 @@
 //
 
 #pragma once
-extern "C" __declspec(dllexport)void ShowDialog();
+//extern "C" __declspec(dllexport)void ShowDialog();
 
 #ifndef __AFXWIN_H__
 	#error "在包含此文件之前包含“stdafx.h”以生成 PCH 文件"
@@ -17,7 +17,9 @@ extern "C" __declspec(dllexport)void ShowDialog();
 // 有关此类的实现，请参阅 MFCPractice.cpp
 //
 
-class CMFCPracticeApp : public CWinApp
+
+// 用于封装主程序框架
+class CMFCPracticeApp : public CWinApp 
 {
 public:
 	CMFCPracticeApp();

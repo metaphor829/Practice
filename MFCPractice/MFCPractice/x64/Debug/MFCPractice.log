@@ -1,2 +1,11 @@
-﻿  MFCPractice.vcxproj -> D:\Backup\Documents\Visual Studio 2017\Projects\MFCPractice\x64\Debug\MFCPractice.exe
-  MFCPractice.vcxproj -> D:\Backup\Documents\Visual Studio 2017\Projects\MFCPractice\x64\Debug\MFCPractice.pdb (Partial PDB)
+﻿  MFCPractice.cpp
+  MFCPracticeDlg.cpp
+D:\Practice\MFCPractice\MFCPractice\MFCPracticeDlg.cpp(333,12): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\Practice\MFCPractice\MFCPractice\MFCPracticeDlg.cpp(334,12): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\Practice\MFCPractice\MFCPractice\MFCPracticeDlg.cpp(341,22): warning C4244: “参数”: 从“double”转换到“ARG_TYPE”，可能丢失数据
+          with
+          [
+              ARG_TYPE=FLOAT
+          ]
+  正在生成代码...
+  MFCPractice.vcxproj -> D:\Practice\MFCPractice\x64\Debug\MFCPractice.exe

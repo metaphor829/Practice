@@ -184,7 +184,7 @@ void CMFCPracticeDlg::OnBnClickedButtonGetname()
 {
 	
 	CFileDialog dlg(TRUE);//弹出打开文件对话框
-	CString filepath;
+	CString cFilepath;
 	CString m_csFileName;
 	if (dlg.DoModal() == IDOK)
 		m_csFileName = dlg.GetPathName();
@@ -192,12 +192,12 @@ void CMFCPracticeDlg::OnBnClickedButtonGetname()
 		m_csFileName.Empty();
 	int iEndPos = 0;
 	iEndPos = m_csFileName.ReverseFind('\\');
-	filepath = m_csFileName.Left(iEndPos);//获取文件夹路径
+	cFilepath = m_csFileName.Left(iEndPos);//获取文件夹路径
 
 	m_list.DeleteAllItems();
 	CFileFind finder;
 	CString filetype = _T(".txt");
-	CString strwildcard= filepath + _T("\\*")+ filetype;//获取文件全路径地址
+	CString strwildcard= cFilepath + _T("\\*")+ filetype;//获取文件全路径地址
 
 	BOOL bworking = finder.FindFile(strwildcard);
 	if (bworking == 0)
@@ -219,7 +219,7 @@ void CMFCPracticeDlg::OnBnClickedButtonGetname()
 					filename = fullname.Left(iEndPos);//读取文件名
 					m_list.InsertItem(index, filename);
 					m_list.SetItemText(index, 1, filetype);
-					m_list.SetItemText(index, 2, filepath);
+					m_list.SetItemText(index, 2, cFilepath);
 		}
 		index++;
 	}
