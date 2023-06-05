@@ -180,46 +180,46 @@ HCURSOR CMFCPracticeDlg::OnQueryDragIcon()
 
 
 
-void CMFCPracticeDlg::OnBnClickedButtonGetname()
+void CMFCPracticeDlg::OnBnClickedButtonGetname()//获取.txt文件按钮
 {
 	
 	CFileDialog dlg(TRUE);//弹出打开文件对话框
-	CString cFilepath;
-	CString m_csFileName;
+	CString cFilePath;
+	CString cFileName;
 	if (dlg.DoModal() == IDOK)
-		m_csFileName = dlg.GetPathName();
+		cFileName = dlg.GetPathName();
 	else
-		m_csFileName.Empty();
+		cFileName.Empty();
 	int iEndPos = 0;
-	iEndPos = m_csFileName.ReverseFind('\\');
-	cFilepath = m_csFileName.Left(iEndPos);//获取文件夹路径
+	iEndPos = cFileName.ReverseFind('\\');
+	cFilePath = cFileName.Left(iEndPos);//获取文件夹路径
 
 	m_list.DeleteAllItems();
 	CFileFind finder;
-	CString filetype = _T(".txt");
-	CString strwildcard= cFilepath + _T("\\*")+ filetype;//获取文件全路径地址
+	CString cFileType = _T(".txt");
+	CString cFullPath= cFilePath + _T("\\*")+ cFileType;//获取文件全路径地址
 
-	BOOL bworking = finder.FindFile(strwildcard);
+	BOOL bworking = finder.FindFile(cFullPath);
 	if (bworking == 0)
 	{
 		MessageBox(TEXT("未成功读取当前文件夹"));
 	}
 	int index = 0;//用于列表索引
 
-	CString filename, fullname;
-	while (bworking)
+	CString cFullName;
+	while (bworking)//读取文件名并处理，将地址、格式挂载到list控件
 	{
 		bworking = finder.FindNextFile();
-		fullname = finder.GetFileName();
+		cFullName = finder.GetFileName();
 		
-		if (fullname != _T(".")&& fullname != _T(".."))
+		if (cFullName != _T(".")&& cFullName != _T(".."))
 		{
 					int iEndPos = 0;
-					iEndPos = fullname.ReverseFind('.');
-					filename = fullname.Left(iEndPos);//读取文件名
-					m_list.InsertItem(index, filename);
-					m_list.SetItemText(index, 1, filetype);
-					m_list.SetItemText(index, 2, cFilepath);
+					iEndPos = cFullName.ReverseFind('.');
+					cFileName = cFullName.Left(iEndPos);//读取文件名
+					m_list.InsertItem(index, cFileName);//必选先InsertItem再SetItem
+					m_list.SetItemText(index, 1, cFileType);
+					m_list.SetItemText(index, 2, cFilePath);
 		}
 		index++;
 	}
@@ -228,63 +228,62 @@ void CMFCPracticeDlg::OnBnClickedButtonGetname()
 
 
 
-void CMFCPracticeDlg::OnBnClickedButtonSave()
+void CMFCPracticeDlg::OnBnClickedButtonSave()//另存为.dat按钮
 {
 	int nIndex = m_list.GetSelectionMark();//获取list控件中高亮选中的文件索引
 	if (nIndex != -1)
 	{
 
-		CString filename = m_list.GetItemText(nIndex, 0);
-		CString filetype = m_list.GetItemText(nIndex, 1);
-		CString filepath = m_list.GetItemText(nIndex, 2);
-		CString fullpath = filepath + _T("\\") + filename + filetype;//获取list控件中高亮选中的文件全路径地址
+		CString cFileName = m_list.GetItemText(nIndex, 0);
+		CString cFileType = m_list.GetItemText(nIndex, 1);
+		CString cFilePath = m_list.GetItemText(nIndex, 2);
+		CString cFullPath = cFilePath + _T("\\") + cFileName + cFileType;//获取list控件中高亮选中的文件全路径地址
 		CStdioFile file;//CStdio可以逐行读取
-		BOOL ret = file.Open(fullpath, CFile::modeRead | CFile::shareDenyNone);
+		BOOL ret = file.Open(cFullPath, CFile::modeRead | CFile::shareDenyNone);
 		if (!ret)
 		{
 			MessageBox(TEXT("打开文件失败"));
 			return;
 		}
 		file.SeekToBegin();// 将文件指针指向文件开始处
-		CString cstrLine;
-		CArray <CString, CString>Tga;//用来保存特征周期和时间间隔 
-		CArray <CString, CString>Word;//用来文字
-		Tga.SetSize(10);
-		Word.SetSize(10);
+		CString cStrLine;
+		vector <CString> vTga;//用来存储特征值和时间间隔
+		vector<CString> vWord;//用来存储文字
+		
 		//读取前三行的数据
 		for (int i = 0; i < 3; i++)
 		{
-			file.ReadString(cstrLine);
-			CString left = cstrLine.Left(cstrLine.Find('\t'));
-			CString right = cstrLine.Mid((cstrLine.Find('\t')+1));
-			Word.SetAt(i, left);
-			Tga.SetAt(i, right);
+			file.ReadString(cStrLine);
+			CString left = cStrLine.Left(cStrLine.Find('\t'));
+			CString right = cStrLine.Mid((cStrLine.Find('\t')+1));
+			vWord.push_back(left);
+			vTga.push_back(right);
 		}
 		//读取前三行后的加速度数据
-		CArray <CString, CString>Acc;
-		Acc.SetSize(50);
-		for(int i=0;file.ReadString(cstrLine)!=0;i++)
+		vector <CString> vAcc;
+		
+		for(int i=0;file.ReadString(cStrLine)!=0;i++)
 		{
-			Acc.SetAt(i,cstrLine);
+			vAcc.push_back(cStrLine);
 		}
 		
 		file.Close();	// 关闭文件 
 		
 		CStdioFile filedat;
-		CString newfiletype = _T(".dat");
-		CString newpath = filepath + _T("\\") + filename + newfiletype;//新的.dat文件全路径地址
-		BOOL ret1=filedat.Open(newpath, CFile::modeCreate|CFile::modeNoTruncate|CFile::modeWrite);//创建新的.dat文件写入
+		CString cNewFileType = _T(".dat");
+		CString cNewPath = cFilePath + _T("\\") + cFileName + cNewFileType;//新的.dat文件全路径地址
+		BOOL ret1=filedat.Open(cNewPath, CFile::modeCreate|CFile::modeNoTruncate|CFile::modeWrite);//创建新的.dat文件写入
 		if (!ret1)
 		{
 			MessageBox(TEXT("创建文件失败"));
 			return;
 		}
 		filedat.SeekToEnd();
-		CString string1 = Tga[0] + _T (",") + Tga[1] + _T("\n");
+		CString string1 = vTga[0] + _T (",") + vTga[1] + _T("\n");
 		filedat.WriteString(string1);
-		for (int i = 0; i<Acc.GetSize(); i++)
+		for (int i = 0; i<vAcc.size(); i++)
 		{
-			filedat.WriteString(Acc[i]+ _T("\n"));
+			filedat.WriteString(vAcc[i]+ _T("\n"));
 		}
 		MessageBox(TEXT("成功另存为.dat文件"));
 	}
@@ -296,60 +295,52 @@ void CMFCPracticeDlg::OnBnClickedButtonSave()
 }
 
 
-void CMFCPracticeDlg::OnBnClickedButtonGetcontent()
+void CMFCPracticeDlg::OnBnClickedButtonGetcontent()//读取内容按钮
 {
 	int nIndex = m_list.GetSelectionMark();//获取list控件中高亮选中的文件索引
 	if (nIndex != -1)
 	{
 
-		CString filename = m_list.GetItemText(nIndex, 0);
-		CString direction = filename.Mid(filename.ReverseFind('(')+1, 1);//获取方向
-		CString filetype = m_list.GetItemText(nIndex, 1);
-		CString filepath = m_list.GetItemText(nIndex, 2);
-		CString fullpath = filepath + _T("\\") + filename + filetype;//获取list控件中高亮选中的文件全路径地址
+		CString cFileName = m_list.GetItemText(nIndex, 0);
+		CString cDirection = cFileName.Mid(cFileName.ReverseFind('(')+1, 1);//获取方向
+		CString cFileType = m_list.GetItemText(nIndex, 1);
+		CString cFilePath = m_list.GetItemText(nIndex, 2);
+		CString cFullPath = cFilePath + _T("\\") + cFileName + cFileType;//获取list控件中高亮选中的文件全路径地址
 		CStdioFile file;
-		BOOL ret = file.Open(fullpath, CFile::modeRead | CFile::shareDenyNone);
+		BOOL ret = file.Open(cFullPath, CFile::modeRead | CFile::shareDenyNone);
 		if (!ret)
 		{
 			MessageBox(TEXT("打开文件失败"));
 			return;
 		}
 		file.SeekToBegin();// 将文件指针指向文件开始处
-		CString cstrLine;
-		CArray <CString, CString>Tga;//用来保存特征周期和时间间隔 
-		CArray <CString, CString>Word;//用来文字
-		Tga.SetSize(10);
-		Word.SetSize(10);
+		CString cStrLine;
+		vector <CString> vTga;//用来存储特征值和时间间隔
+		vector <CString> vWord;//用来存储文字
+
 		//读取前三行的数据
 		for (int i = 0; i < 3; i++)
 		{
-			file.ReadString(cstrLine);
-
-			CString left = cstrLine.Left(cstrLine.Find('\t'));
-			CString right = cstrLine.Mid((cstrLine.Find('\t') + 1));
-			Word.SetAt(i, left);
-			Tga.SetAt(i, right);
+			file.ReadString(cStrLine);
+			CString left = cStrLine.Left(cStrLine.Find('\t'));
+			CString right = cStrLine.Mid((cStrLine.Find('\t') + 1));
+			vWord.push_back(left);
+			vTga.push_back(right);
 		}
-		float Tg = _ttof(Tga[0]);//获取特征周期
-		float Ta = _ttof(Tga[1]);//获取时间间隔
+		float fTg = _ttof(vTga[0]);//获取特征周期
+		float fTa = _ttof(vTga[1]);//获取时间间隔
 
 		//读取前三行后的加速度数据
-		CArray <FLOAT, FLOAT>Acc;
-		Acc.SetSize(50);
-		for (int i = 0; file.ReadString(cstrLine) != 0; i++)
+		vector<float>vAcc;
+		for (int i = 0; file.ReadString(cStrLine) != 0; i++)
 		{
-			Acc.SetAt(i, _ttof(cstrLine));
+			vAcc.push_back(_ttof(cStrLine));
 		}
-		float maxacc = Acc[0];
-		for (int i = 1; i < Acc.GetSize(); i++) 
-		{
-			if (Acc[i] > maxacc) 
-			{ maxacc = Acc[i]; }
-		}
-		m_direction = direction;//赋值控件变量
-		m_Tg = Tg;
-		m_Ta = Ta;
-		m_maxacc = maxacc;
+		float fMaxacc = *max_element(vAcc.begin(), vAcc.end());//vector找最大值
+		m_direction = cDirection;//赋值控件变量
+		m_Tg = fTg;
+		m_Ta = fTa;
+		m_maxacc = fMaxacc;
 		UpdateData(FALSE);//更新到对应的控件
 	}
 	else
