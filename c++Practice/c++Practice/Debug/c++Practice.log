@@ -1,7 +1,1 @@
-﻿  Practice.cpp
-d:\backup\documents\visual studio 2017\projects\c++practice\c++practice\practice.cpp(28): warning C4244: “参数”: 从“__int64”转换到“intptr_t”，可能丢失数据
-d:\backup\documents\visual studio 2017\projects\c++practice\c++practice\practice.cpp(30): warning C4244: “参数”: 从“__int64”转换到“intptr_t”，可能丢失数据
-d:\backup\documents\visual studio 2017\projects\c++practice\c++practice\practice.cpp(34): warning C4018: “<”: 有符号/无符号不匹配
-d:\backup\documents\visual studio 2017\projects\c++practice\c++practice\practice.cpp(136): warning C4018: “<”: 有符号/无符号不匹配
-  c++Practice.vcxproj -> d:\backup\documents\visual studio 2017\Projects\c++Practice\Debug\c++Practice.exe
-  c++Practice.vcxproj -> d:\backup\documents\visual studio 2017\Projects\c++Practice\Debug\c++Practice.pdb (Partial PDB)
+﻿  c++Practice.vcxproj -> D:\Practice\c++Practice\Debug\c++Practice.exe

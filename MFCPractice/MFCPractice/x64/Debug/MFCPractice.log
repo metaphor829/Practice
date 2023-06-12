@@ -1,1 +1,9 @@
-﻿  MFCPractice.vcxproj -> D:\Practice\MFCPractice\x64\Debug\MFCPractice.exe
+﻿  MFCPracticeDlg.cpp
+D:\Practice\MFCPractice\MFCPractice\MFCPracticeDlg.cpp(330,13): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\Practice\MFCPractice\MFCPractice\MFCPracticeDlg.cpp(331,13): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\Practice\MFCPractice\MFCPractice\MFCPracticeDlg.cpp(337,24): warning C4244: “参数”: 从“double”转换到“_Ty”，可能丢失数据
+          with
+          [
+              _Ty=float
+          ]
+  MFCPractice.vcxproj -> D:\Practice\MFCPractice\x64\Debug\MFCPractice.exe

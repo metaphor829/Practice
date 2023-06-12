@@ -14,128 +14,128 @@ CInfoFile::~CInfoFile()
 {
 }
 
-void CInfoFile::GetName(string path, string filetype, string FullPathName[],int& FilenNumbers)
+void CInfoFile::GetName(string sPath, string sFiletype, string sFullPathName[],int& iFileNumbers)
 {
-	vector<string> files;
+	vector<string> vFiles;
 	long long hFile = 0;
 	struct _finddata_t fileinfo;
 	string p;
-	if ((hFile = _findfirst(p.assign(path).append("\\*" + filetype).c_str(), &fileinfo)) != -1) {
+	if ((hFile = _findfirst(p.assign(sPath).append("\\*" + sFiletype).c_str(), &fileinfo)) != -1) {
 		do {
 			// 保存文件的全路径
-			files.push_back(p.assign(path).append("\\").append(fileinfo.name));
+			vFiles.push_back(p.assign(sPath).append("\\").append(fileinfo.name));
 
 		} while (_findnext(hFile, &fileinfo) == 0);  //寻找下一个，成功返回0，否则-1
 		
 		_findclose(hFile);
 	}
 
-		FilenNumbers = files.size();//传回文件个数
-		for(int i = 0; i < files.size(); i++)
+		iFileNumbers = vFiles.size();//传回文件个数
+		for(int i = 0; i < vFiles.size(); i++)
 		{
 			//读取文件名
-		    FullPathName[i]=accumulate(files[i].begin(), files[i].end(), FullPathName[i]);
-			int a = FullPathName[i].find_last_of("\\");
-			int b = FullPathName[i].find_first_of(",");
+			sFullPathName[i]=accumulate(vFiles[i].begin(), vFiles[i].end(), sFullPathName[i]);
+			int a = sFullPathName[i].find_last_of("\\");
+			int b = sFullPathName[i].find_first_of(",");
 
-			std::string filename = FullPathName[i].substr(a + 1, b - a - 1);
-			std::cout << filename << std::endl;
+			std::string sFileName = sFullPathName[i].substr(a + 1, b - a - 1);
+			std::cout << sFileName << std::endl;
 
 			//读取文件名中的Tg
-			int c = FullPathName[i].find_first_of("Tg");
-			std::string Tg = FullPathName[i].substr(c + 3, 4);
-			std::cout << "Tg=" << Tg << std::endl;
+			int c = sFullPathName[i].find_first_of("Tg");
+			std::string sTg = sFullPathName[i].substr(c + 3, 4);
+			std::cout << "Tg=" << sTg << std::endl;
 
 			//读取文件名中的方向
-			int d = FullPathName[i].find_last_of("(");
-			int e = FullPathName[i].find_last_of(")");
-			std::string direction = FullPathName[i].substr(d + 1, e - d - 4);
-			std::cout << "方向=" << direction << std::endl;
+			int d = sFullPathName[i].find_last_of("(");
+			int e = sFullPathName[i].find_last_of(")");
+			std::string sDirection = sFullPathName[i].substr(d + 1, e - d - 4);
+			std::cout << "方向=" << sDirection << std::endl;
 
 		}
 }
 
 
 
-void CInfoFile::MaxAcc(string FullPathName[],int filenumbers)
+void CInfoFile::MaxAcc(string sFullPathName[],int iFileNumbers)
 {
 
-	for (int i = 0; i <filenumbers; i++)
+	for (int i = 0; i < iFileNumbers; i++)
 	{
 		ifstream ifs;
-		ifs.open(FullPathName[i]);
+		ifs.open(sFullPathName[i]);
 		if (!ifs.is_open())
 		{
 			cerr << "cannot open the file" << endl;
 		}
 		string Line;
-		vector<float> Accs;
+		vector<float> vAccs;
 		while (getline(ifs, Line))//读取每一行的数据
 		{
 
 			stringstream temp(Line);
-			float acc;
-			temp >> acc;
-			Accs.push_back(acc);//将每一行的数据加入到float容器中
+			float fAcc;
+			temp >> fAcc;
+			vAccs.push_back(fAcc);//将每一行的数据加入到float容器中
 
 		}
-		int a = FullPathName[i].find_last_of("\\");
-		int b = FullPathName[i].find_first_of(",");
-		std::string filename = FullPathName[i].substr(a + 1, b - a - 1);
-		auto maxAcc = max_element(Accs.begin(), Accs.end());//遍历容器中的最大值
-		std::cout<< filename << "最大加速度为" << *maxAcc << std::endl;
+		int a = sFullPathName[i].find_last_of("\\");
+		int b = sFullPathName[i].find_first_of(",");
+		std::string sFileName = sFullPathName[i].substr(a + 1, b - a - 1);
+		auto MaxAcc = max_element(vAccs.begin(), vAccs.end());//遍历容器中的最大值
+		std::cout<< sFileName << "最大加速度为" << *MaxAcc << std::endl;
 	}
 
 	
 }
 
 
-void CInfoFile::SaveData(string FullPathName[],int FileNumbers)
+void CInfoFile::SaveData(string sFullPathName[],int iFileNumbers)
 {	
-	for (int i = 0; i < FileNumbers; i++)
+	for (int i = 0; i < iFileNumbers; i++)
 	{
 		ifstream ifs;
-		ifs.open(FullPathName[i]);
+		ifs.open(sFullPathName[i]);
 		if (!ifs.is_open())
 		{
 			cerr << "cannot open the file" << endl;
 		}
 		string Line;
-		vector<float> Tga;
-		vector<float> Accs;
-		vector<string> Words;
+		vector<float> vTga;
+		vector<float> vAccs;
+		vector<string> vWords;
 
 		for (int i = 0; i < 3; i++)//读取前三行中特征周期和时间间隔，将文字和数据分别保存在两个容器
 		{
 			getline(ifs, Line);
 			stringstream temp(Line);
-			float tga;
-			string word;
-			temp >> word >> tga;
-			Tga.push_back(tga);
-			Words.push_back(word);
+			float fTga;
+			string sWord;
+			temp >> sWord >> fTga;
+			vTga.push_back(fTga);
+			vWords.push_back(sWord);
 		}
-		int linenumber = 1;
+		int iNumber = 1;
 		while (getline(ifs, Line))//读取加速度每一行的数据保存在容器中
 		{
 
 			stringstream temp(Line);
-			float acc;
-			temp >> acc;
-			Accs.push_back(acc);//将每一行的数据加入到float容器中
-			linenumber++;
+			float fAcc;
+			temp >> fAcc;
+			vAccs.push_back(fAcc);//将每一行的数据加入到float容器中
+			iNumber++;
 			
 		}
-		float Tg = Tga[0];//特征周期
-		float Ta = Tga[1];//时间间隔
-		int a = FullPathName[i].find_last_of("\\");
-		int b = FullPathName[i].find_first_of(",");
-		std::string Filename = FullPathName[i].substr(a + 1, b - a - 1);
-		ofstream ofs(Filename + ".dat"); //创建本文件名的.dat文件
-		ofs << linenumber << "," << Ta << endl;//写入行数和时间间隔
-		for (int i = 0; i < Accs.size(); i++)//写入加速度的值
+		float fTg = vTga[0];//特征周期
+		float fTa = vTga[1];//时间间隔
+		int a = sFullPathName[i].find_last_of("\\");
+		int b = sFullPathName[i].find_first_of(",");
+		std::string sFileName = sFullPathName[i].substr(a + 1, b - a - 1);
+		ofstream ofs(sFileName + ".dat"); //创建本文件名的.dat文件
+		ofs << iNumber << "," << fTa << endl;//写入行数和时间间隔
+		for (int i = 0; i < vAccs.size(); i++)//写入加速度的值
 		{
-			ofs << Accs[i] << endl;
+			ofs << vAccs[i] << endl;
 		}
 	}
 }
@@ -144,15 +144,15 @@ void CInfoFile::SaveData(string FullPathName[],int FileNumbers)
 int main()
 {
 	CInfoFile file;
-	char Pathbuffer[128] = { 0 };
-	int FileNumbers=0;
-	_getcwd(Pathbuffer, sizeof(Pathbuffer));//获取当前工程目录
-	std::string* PathName=new string[128] ;//创建文件名数组
-	file.GetName(Pathbuffer,".txt", PathName, FileNumbers);
-	file.MaxAcc(PathName, FileNumbers);
-	file.SaveData(PathName, FileNumbers);
+	char cPathBuffer[128] = { 0 };
+	int iFileNumbers=0;
+	_getcwd(cPathBuffer, sizeof(cPathBuffer));//获取当前工程目录
+	std::string* sPathName=new string[128] ;//创建文件名数组
+	file.GetName(cPathBuffer,".txt", sPathName, iFileNumbers);
+	file.MaxAcc(sPathName, iFileNumbers);
+	file.SaveData(sPathName, iFileNumbers);
 
-	delete[]PathName;
+	delete[]sPathName;
 		
 	std::cin.get();
 }

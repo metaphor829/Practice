@@ -67,7 +67,7 @@ CMFCPracticeDlg::CMFCPracticeDlg(CWnd* pParent /*=NULL*/)
 	, m_Ta(0)
 	, m_maxacc(0)
 {
-	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	//m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
 void CMFCPracticeDlg::DoDataExchange(CDataExchange* pDX)

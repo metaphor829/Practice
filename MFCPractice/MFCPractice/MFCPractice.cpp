@@ -10,12 +10,6 @@
 #define new DEBUG_NEW
 #endif
 
-/*void ShowDialog()
-{
-
-	CMFCPracticeDlg dlg;
-	dlg.DoModal();
-}*///隐式调用接口函数 每次使用时还需注释 the app 和InitInstance中的创建dlg
 
 
 // CMFCPracticeApp
