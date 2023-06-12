@@ -6,15 +6,9 @@
 #include <algorithm>
 
 
-CInfoFile::CInfoFile()
-{
-}
 
-CInfoFile::~CInfoFile()
-{
-}
 
-void CInfoFile::GetName(string sPath, string sFiletype, string sFullPathName[],int& iFileNumbers)
+void GetName(string sPath, string sFiletype, string sFullPathName[],int& iFileNumbers)
 {
 	vector<string> vFiles;
 	long long hFile = 0;
@@ -33,7 +27,7 @@ void CInfoFile::GetName(string sPath, string sFiletype, string sFullPathName[],i
 		iFileNumbers = vFiles.size();//传回文件个数
 		for(int i = 0; i < vFiles.size(); i++)
 		{
-			//读取文件名
+			//读取文件名·
 			sFullPathName[i]=accumulate(vFiles[i].begin(), vFiles[i].end(), sFullPathName[i]);
 			int a = sFullPathName[i].find_last_of("\\");
 			int b = sFullPathName[i].find_first_of(",");
@@ -57,13 +51,11 @@ void CInfoFile::GetName(string sPath, string sFiletype, string sFullPathName[],i
 
 
 
-void CInfoFile::MaxAcc(string sFullPathName[],int iFileNumbers)
+void GetMaxAcc(string sFullPathName)
 {
 
-	for (int i = 0; i < iFileNumbers; i++)
-	{
 		ifstream ifs;
-		ifs.open(sFullPathName[i]);
+		ifs.open(sFullPathName);
 		if (!ifs.is_open())
 		{
 			cerr << "cannot open the file" << endl;
@@ -79,23 +71,22 @@ void CInfoFile::MaxAcc(string sFullPathName[],int iFileNumbers)
 			vAccs.push_back(fAcc);//将每一行的数据加入到float容器中
 
 		}
-		int a = sFullPathName[i].find_last_of("\\");
-		int b = sFullPathName[i].find_first_of(",");
-		std::string sFileName = sFullPathName[i].substr(a + 1, b - a - 1);
+		int a = sFullPathName.find_last_of("\\");
+		int b = sFullPathName.find_first_of(",");
+		std::string sFileName = sFullPathName.substr(a + 1, b - a - 1);
 		auto MaxAcc = max_element(vAccs.begin(), vAccs.end());//遍历容器中的最大值
 		std::cout<< sFileName << "最大加速度为" << *MaxAcc << std::endl;
-	}
-
-	
 }
 
+	
 
-void CInfoFile::SaveData(string sFullPathName[],int iFileNumbers)
+
+
+void SaveData(string sFullPathName)
 {	
-	for (int i = 0; i < iFileNumbers; i++)
-	{
+	
 		ifstream ifs;
-		ifs.open(sFullPathName[i]);
+		ifs.open(sFullPathName);
 		if (!ifs.is_open())
 		{
 			cerr << "cannot open the file" << endl;
@@ -105,54 +96,53 @@ void CInfoFile::SaveData(string sFullPathName[],int iFileNumbers)
 		vector<float> vAccs;
 		vector<string> vWords;
 
-		for (int i = 0; i < 3; i++)//读取前三行中特征周期和时间间隔，将文字和数据分别保存在两个容器
+		
+		while (getline(ifs, Line))//读取前三行中特征周期和时间间隔，将文字和数据分别保存在两个容器
 		{
-			getline(ifs, Line);
-			stringstream temp(Line);
-			float fTga;
-			string sWord;
-			temp >> sWord >> fTga;
-			vTga.push_back(fTga);
-			vWords.push_back(sWord);
-		}
-		int iNumber = 1;
-		while (getline(ifs, Line))//读取加速度每一行的数据保存在容器中
-		{
-
-			stringstream temp(Line);
-			float fAcc;
-			temp >> fAcc;
-			vAccs.push_back(fAcc);//将每一行的数据加入到float容器中
-			iNumber++;
 			
+			stringstream temp(Line);
+			if (Line[0] >= '0' && Line[0] <= '9')
+			{
+				float fAcc;
+				temp >> fAcc;
+				vAccs.push_back(fAcc);
+			}
+			else
+			{
+				string sWord;
+				float fTga;
+				temp >> sWord >> fTga;
+				vTga.push_back(fTga);
+				vWords.push_back(sWord);
+			}
 		}
+		
 		float fTg = vTga[0];//特征周期
 		float fTa = vTga[1];//时间间隔
-		int a = sFullPathName[i].find_last_of("\\");
-		int b = sFullPathName[i].find_first_of(",");
-		std::string sFileName = sFullPathName[i].substr(a + 1, b - a - 1);
+		int a = sFullPathName.find_last_of("\\");
+		int b = sFullPathName.find_first_of(",");
+		std::string sFileName = sFullPathName.substr(a + 1, b - a - 1);
 		ofstream ofs(sFileName + ".dat"); //创建本文件名的.dat文件
-		ofs << iNumber << "," << fTa << endl;//写入行数和时间间隔
+		ofs << fTg << "," << fTa << endl;//写入特征周期和时间间隔
 		for (int i = 0; i < vAccs.size(); i++)//写入加速度的值
 		{
 			ofs << vAccs[i] << endl;
 		}
-	}
+	
 }
 
 
 int main()
 {
-	CInfoFile file;
 	char cPathBuffer[128] = { 0 };
 	int iFileNumbers=0;
 	_getcwd(cPathBuffer, sizeof(cPathBuffer));//获取当前工程目录
-	std::string* sPathName=new string[128] ;//创建文件名数组
-	file.GetName(cPathBuffer,".txt", sPathName, iFileNumbers);
-	file.MaxAcc(sPathName, iFileNumbers);
-	file.SaveData(sPathName, iFileNumbers);
-
-	delete[]sPathName;
-		
+	string sPathName[128];//创建文件名数组
+	GetName(cPathBuffer,".txt", sPathName, iFileNumbers);
+	for (int i = 0; i < iFileNumbers; i++)
+	{
+		GetMaxAcc(sPathName[i]);
+		SaveData(sPathName[i]);
+	}
 	std::cin.get();
 }

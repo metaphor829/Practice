@@ -1,0 +1,17 @@
+*
+!.gitignore
+!*/
+!*.cpp
+!*.c
+!*.h
+!*.vcproj
+!*.sln
+!.**/*.cpp
+!.**/*.c
+!.**/*.hpp
+!.**/*.h
+!.**/*.vcproj
+!.**/*.aps
+!.**/*.filters
+!.**/*.users
+!.**/*.rc

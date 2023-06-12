@@ -336,11 +336,11 @@ void CMFCPracticeDlg::OnBnClickedButtonGetcontent()//读取内容按钮
 		{
 			vAcc.push_back(_ttof(cStrLine));
 		}
-		float fMaxacc = *max_element(vAcc.begin(), vAcc.end());//vector找最大值
+		float fMaxAcc = *max_element(vAcc.begin(), vAcc.end());//vector找最大值
 		m_direction = cDirection;//赋值控件变量
 		m_Tg = fTg;
 		m_Ta = fTa;
-		m_maxacc = fMaxacc;
+		m_maxacc = fMaxAcc;
 		UpdateData(FALSE);//更新到对应的控件
 	}
 	else
