@@ -6,6 +6,10 @@
 !*.h
 !*.vcproj
 !*.sln
+!*.aps
+!*.filters
+!*.users
+!*.rc
 !.**/*.cpp
 !.**/*.c
 !.**/*.hpp
